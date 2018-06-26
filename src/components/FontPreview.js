@@ -3,23 +3,37 @@ import React from 'react';
 class FontPreview extends React.Component {
 
   state = {
-    color: 'black'
+    color: 'black',
+    font: 'Helvetica'
   }
 
-  handleColorChange = (e) => {
-    this.setState({color: e.target.value})
+  handleSelectChange = (e) => {
+    this.setState({[e.target.name]: e.target.value})
   }
+
   render(){
+    console.log(this.state.font);
     return (
       <div style={styles.div}>
-        <p style={{...styles.p, ...{color: `${this.state.color}`}}}>
+        <p style={{...styles.p, ...{color: `${this.state.color}`}, ...{fontFamily: `${this.state.font}`}}}>
           {this.props.masterText}
         </p>
-        <select onChange={this.handleColorChange}>
-          <option value="black">Black</option>
-          <option value="blue">Blue</option>
-          <option value="red">Red</option>
-        </select>
+
+        <div style={{display: 'flex'}}>
+
+          <select onChange={this.handleSelectChange} name="font">
+            <option value="Helvetica">Helvetica</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Courier New">Courier New</option>
+          </select>
+          <select onChange={this.handleSelectChange} name="color">
+            <option value="black">Black</option>
+            <option value="blue">Blue</option>
+            <option value="red">Red</option>
+          </select>
+        </div>
+
+
       </div>
     )
   }
