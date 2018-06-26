@@ -4,7 +4,8 @@ class FontPreview extends React.Component {
 
   state = {
     color: 'black',
-    font: 'Helvetica'
+    font: 'Helvetica',
+    listOfFonts: ['Helvetica', 'Anton', 'IM Fell English SC', 'Inconsolata', 'Shrikhand', 'Spirax', 'Times New Roman']
   }
 
   handleSelectChange = (e) => {
@@ -12,7 +13,7 @@ class FontPreview extends React.Component {
   }
 
   render(){
-    console.log(this.state.font);
+
     return (
       <div style={styles.div}>
         <p style={{...styles.p, ...{color: `${this.state.color}`}, ...{fontFamily: `${this.state.font}`}}}>
@@ -22,15 +23,18 @@ class FontPreview extends React.Component {
         <div style={{display: 'flex'}}>
 
           <select onChange={this.handleSelectChange} name="font">
-            <option value="Helvetica">Helvetica</option>
-            <option value="Times New Roman">Times New Roman</option>
-            <option value="Courier New">Courier New</option>
+            {this.state.listOfFonts.map((fontName, ind) => {
+              return <option key={ind} value={fontName}>{fontName}</option>
+            })}
           </select>
           <select onChange={this.handleSelectChange} name="color">
             <option value="black">Black</option>
             <option value="blue">Blue</option>
             <option value="red">Red</option>
           </select>
+
+          {this.props.removable && <button onClick={()=>{this.props.removePreview(this.props.ind)}}>Remove</button>}
+
         </div>
 
 
@@ -40,18 +44,15 @@ class FontPreview extends React.Component {
 }
 
 const styles = {
-  // alignSelf: "center",
   div: {
-    width: "200px",
+    width: "300px",
     margin: "0 auto",
     border: "1px solid black",
-    // minHeight: "20px"
   },
   p: {
-    // fontFamily: "serif"
     minHeight: "20px",
-    padding: "20px"
-    // color: `${this.state.color}`
+    padding: "20px",
+    fontSize: "20px"
   }
 }
 

@@ -9,7 +9,7 @@ class App extends Component {
 
   state = {
     masterText: "",
-    fontPreviewCount: 1
+    fontPreviewCount: []
   }
 
   handleMasterText = (e) => {
@@ -17,17 +17,18 @@ class App extends Component {
   }
 
   addPreview = () => {
-    this.setState({fontPreviewCount: this.state.fontPreviewCount+1})
+    const fontPreviewCount = [...this.state.fontPreviewCount, "1"]
+    // console.log(fontPreviewCount);
+    this.setState({fontPreviewCount}, ()=>{
+      // console.log(this.state);
+    })
+  }
+
+  removePreview = (ind) => {
+    const fontPreviewCount = [...this.state.fontPreviewCount];
   }
 
   render() {
-
-    var fp = []
-    for(var i = 1; i < this.state.fontPreviewCount; i++){
-      fp.push(i)
-    }
-
-    console.log(this.state.fontPreviewCount);
     return (
       <div className="App">
         <header className="App-header">
@@ -39,9 +40,8 @@ class App extends Component {
         <FontPreview masterText={this.state.masterText}/>
 
         {
-          fp.map((item, index) => {
-            return <FontPreview masterText={this.state.masterText} key={index}/>
-
+          this.state.fontPreviewCount.map((item, index) => {
+            return <FontPreview masterText={this.state.masterText} key={index} ind={index} removable={true} removePreview={this.removePreview}/>
           })
         }
         <button onClick={this.addPreview}>Add Preview</button>
