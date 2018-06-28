@@ -17,15 +17,17 @@ class App extends Component {
   }
 
   addPreview = () => {
-    const fontPreviewCount = [...this.state.fontPreviewCount, "1"]
-    // console.log(fontPreviewCount);
-    this.setState({fontPreviewCount}, ()=>{
-      // console.log(this.state);
-    })
+    const fontPreviewCount = [...this.state.fontPreviewCount, Date.now()]
+    this.setState({fontPreviewCount})
   }
 
   removePreview = (ind) => {
     const fontPreviewCount = [...this.state.fontPreviewCount];
+    const index = fontPreviewCount.indexOf(ind);
+    if(index !== -1){
+      fontPreviewCount.splice(index, 1)
+      return this.setState({fontPreviewCount})
+    }
   }
 
   render() {
@@ -40,8 +42,8 @@ class App extends Component {
         <FontPreview masterText={this.state.masterText}/>
 
         {
-          this.state.fontPreviewCount.map((item, index) => {
-            return <FontPreview masterText={this.state.masterText} key={index} ind={index} removable={true} removePreview={this.removePreview}/>
+          this.state.fontPreviewCount.map((item) => {
+            return <FontPreview masterText={this.state.masterText} key={item} ind={item} removable={true} removePreview={this.removePreview}/>
           })
         }
         <button onClick={this.addPreview}>Add Preview</button>
