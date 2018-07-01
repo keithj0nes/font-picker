@@ -1,0 +1,36 @@
+/* p: {
+  background: 'green',
+  width: '100%',
+  fontSize: '100%',
+  minHeight: "20px",
+  padding: "20px",
+  fontSize: "20px",
+}
+
+
+div: {
+  width: "300px",
+  margin: "10px auto",
+  border: "1px solid black",
+}, */
+
+.font-preview-container {
+  /* background color set in FontPreview.js */
+  width: 500px;
+  margin: 20px auto;
+  border: 3px solid black;
+  height: auto;
+
+}
+
+.font-preview-text {
+  min-height: 10px;
+  height: auto;
+  padding: 20px;
+  font-size: 200px;
+  text-align: center;
+}
+
+.font-preview-options {
+  background: #eee;
+}
