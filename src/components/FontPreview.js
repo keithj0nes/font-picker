@@ -10,12 +10,12 @@ class FontPreview extends React.Component {
     showShadowColor: 'black',
     showOutline: false,
     fontSizes: '',
+    fontWeightBold: false,
     listOfFonts: ['Helvetica', 'Anton', 'IM Fell English SC', 'Inconsolata', 'Shrikhand', 'Spirax', 'Times New Roman']
   }
 
   handleSelectChange = (e) => {
-    const target = e.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     this.setState({[e.target.name]: value})
   }
   //
@@ -29,29 +29,58 @@ class FontPreview extends React.Component {
   // }
 
 
+componentDidMount(){
+  this.fitTextOnCanvas(this.props.masterText, this.state.selectedFont, 100)
+}
 
+componentDidUpdate(){
+  this.fitTextOnCanvas(this.props.masterText, this.state.selectedFont, 100)
+}
 
+fitTextOnCanvas = (text,fontface,yPosition) => {
+    const canvas=document.getElementById(`canvas-${this.props.id}`);
+    const context=canvas.getContext("2d");
+    const fontWeight = this.state.fontWeightBold ? 'bold' : 'normal';
+
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    // start with a large font size
+    let fontsize=200;
+    // lower the font size until the text fits the canvas
+    do{
+        fontsize--;
+        // context.font=fontsize+"px "+fontface;
+          context.font = ` ${fontWeight} ${fontsize}px ${this.state.selectedFont}`
+
+        context.textBaseline="middle";
+
+    }while(context.measureText(text).width>canvas.width)
+
+    // draw the text
+    context.fillText(text, 0 ,yPosition);
+}
 
   render(){
 
-    console.log(this.props);
     return (
       <div  className="font-preview-container">
         <div id="haha">
-          <p style={{
+
+        <canvas id={`canvas-${this.props.id}`} width="700" height="200" style={{border: "1px solid red"}}></canvas>
+
+          <p  style={{
             ...{backgroundColor: `${this.props.boatColor}`},
             ...{color: `${this.state.selectedColor}`},
             ...{fontFamily: `${this.state.selectedFont}`},
+            ...{fontWeight: this.state.fontWeightBold ? 'bold' : 'normal'},
             // ...{textShadow: "4px 4px white, 8px 8px blue"}
-            ...{textShadow: this.state.showShadow && `4px 4px white, 8px 8px ${this.state.showShadowColor}`}}
+            ...{textShadow: this.state.showShadow && `3px 3px white, 8px 8px ${this.state.showShadowColor}`}}
           } className="font-preview-text scale--js">
-           {/*
-             <span id="mytext" ref={(textSize)=>{this.textSize = textSize}} style={{background:'teal'}}>
               {this.props.masterText}
-            </span>
-           */}
-            {this.props.masterText}
 
+          </p>
+
+          <p id="place-name">
+            {this.props.masterText}
           </p>
         </div>
 
@@ -66,6 +95,8 @@ class FontPreview extends React.Component {
             <option value="black">Black</option>
             <option value="blue">Blue</option>
             <option value="red">Red</option>
+            <option value="green">Green</option>
+
           </select>
 
 
@@ -85,15 +116,22 @@ class FontPreview extends React.Component {
             {this.state.showShadow &&
               <div>
                 <h1>SHADOW DATA</h1>
+
+                <select onChange={this.handleSelectChange} name="showShadowColor">
+                  <option value="black">Black</option>
+                  <option value="blue">Blue</option>
+                  <option value="red">Red</option>
+                  <option value="green">Green</option>
+
+                </select>
+
               </div>
             }
           </div>
 
           <div>
 
-          {/*
-          <button onClick={this.handleFontSizeChange}>s</button>
-          */}
+          <button onClick={()=>{this.setState({fontWeightBold: !this.state.fontWeightBold})}}>s</button>
 
 
           {this.props.removable && <button onClick={()=>{this.props.removePreview(this.props.id)}}>Remove</button>}
