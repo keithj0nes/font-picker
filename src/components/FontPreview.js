@@ -11,6 +11,8 @@ class FontPreview extends React.Component {
     showOutline: false,
     fontSizes: '',
     fontWeightBold: false,
+    textWidth: '0',
+    textHeight: '0',
     listOfFonts: ['Helvetica', 'Anton', 'IM Fell English SC', 'Inconsolata', 'Shrikhand', 'Spirax', 'Times New Roman']
   }
 
@@ -33,30 +35,42 @@ componentDidMount(){
   this.fitTextOnCanvas(this.props.masterText, this.state.selectedFont, 100)
 }
 
-componentDidUpdate(){
-  this.fitTextOnCanvas(this.props.masterText, this.state.selectedFont, 100)
+componentDidUpdate(prevProps, prevState){
+  // console.log(prevState);
+  console.log('updating');
+  this.fitTextOnCanvas(this.props.masterText, this.state.selectedFont, 100, prevState, prevProps)
 }
 
-fitTextOnCanvas = (text,fontface,yPosition) => {
+fitTextOnCanvas = (text,fontface,yPosition, prevState, prevProps) => {
     const canvas=document.getElementById(`canvas-${this.props.id}`);
     const context=canvas.getContext("2d");
     const fontWeight = this.state.fontWeightBold ? 'bold' : 'normal';
+    const textWidthInCanvas = context.measureText(text).width;
 
+    //clear canvas
     context.clearRect(0, 0, canvas.width, canvas.height);
     // start with a large font size
-    let fontsize=200;
+    let fontsize = 160;
     // lower the font size until the text fits the canvas
-    do{
+    do {
         fontsize--;
-        // context.font=fontsize+"px "+fontface;
-          context.font = ` ${fontWeight} ${fontsize}px ${this.state.selectedFont}`
-
-        context.textBaseline="middle";
-
-    }while(context.measureText(text).width>canvas.width)
-
+        context.font = ` ${fontWeight} ${fontsize}px ${this.state.selectedFont}`
+        context.fillStyle = this.state.selectedColor;
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+    } while(context.measureText(text).width > canvas.width)
     // draw the text
-    context.fillText(text, 0 ,yPosition);
+    context.fillText(text, 350 ,yPosition);
+
+
+    if(prevState && prevState.textWidth >= 0){
+      if(prevState.textWidth !== textWidthInCanvas){
+        this.setState({textWidth: textWidthInCanvas})
+      }
+      if(prevState.textHeight !== fontsize){
+        this.setState({textHeight: fontsize})
+      }
+    }
 }
 
   render(){
@@ -66,6 +80,8 @@ fitTextOnCanvas = (text,fontface,yPosition) => {
         <div id="haha">
 
         <canvas id={`canvas-${this.props.id}`} width="700" height="200" style={{border: "1px solid red"}}></canvas>
+        <p>width: {Number(this.state.textWidth).toFixed()}</p>
+        <p>height: {Number(this.state.textHeight)}</p>
 
           <p  style={{
             ...{backgroundColor: `${this.props.boatColor}`},
