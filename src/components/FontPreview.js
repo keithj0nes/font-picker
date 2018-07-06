@@ -9,6 +9,7 @@ class FontPreview extends React.Component {
     showShadow: false,
     showShadowColor: 'black',
     showOutline: false,
+    showOutlineColor: 'black',
     fontSizes: '',
     fontWeightBold: false,
     textWidth: '0',
@@ -20,65 +21,71 @@ class FontPreview extends React.Component {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     this.setState({[e.target.name]: value})
   }
-  //
-  // handleFontSizeChange = () => {
-  //   var h = (this.textSize.clientHeight + 1);
-  //   var w = (this.textSize.clientWidth + 1);
-  //   console.log(this.textSize);
-  //   var mytext = document.getElementById('mytext')
-  //   console.log(mytext.getBoundingClientRect().width.toFixed(2));
-  //   console.log(h, w);
-  // }
 
+  componentDidMount(){
+    this.fitTextOnCanvas(this.props.masterText, this.state.selectedFont, 100)
+  }
 
-componentDidMount(){
-  this.fitTextOnCanvas(this.props.masterText, this.state.selectedFont, 100)
-}
+  componentDidUpdate(prevProps, prevState){
+    console.log('updating');
+    this.fitTextOnCanvas(this.props.masterText, this.state.selectedFont, 100, prevState, prevProps);
+  }
 
-componentDidUpdate(prevProps, prevState){
-  // console.log(prevState);
-  console.log('updating');
-  this.fitTextOnCanvas(this.props.masterText, this.state.selectedFont, 100, prevState, prevProps);
-}
+  fitTextOnCanvas = (text,fontface,yPosition, prevState, prevProps) => {
+      const canvas=document.getElementById(`canvas-${this.props.id}`);
+      const context=canvas.getContext("2d");
+      const fontWeight = this.state.fontWeightBold ? 'bold' : 'normal';
+      const textWidthInCanvas = context.measureText(text).width;
 
-fitTextOnCanvas = (text,fontface,yPosition, prevState, prevProps) => {
-    const canvas=document.getElementById(`canvas-${this.props.id}`);
-    const context=canvas.getContext("2d");
-    const fontWeight = this.state.fontWeightBold ? 'bold' : 'normal';
-    const textWidthInCanvas = context.measureText(text).width;
+      //clear canvas
+      context.clearRect(0, 0, canvas.width, canvas.height);
 
-    //clear canvas
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.fillStyle = this.props.boatColor;
-    context.fillRect(0,0,canvas.width, canvas.height)
-    // start with a large font size
-    let fontsize = 160;
-    // lower the font size until the text fits the canvas
-    do {
-        fontsize--;
-        context.font = ` ${fontWeight} ${fontsize}px ${this.state.selectedFont}`
-        context.fillStyle = this.state.selectedColor;
-        context.textAlign = "center";
-        context.textBaseline = "middle";
-    } while(context.measureText(text).width > canvas.width)
-    // draw the text
-    context.fillText(text, 350 ,yPosition);
+      //fill whole canvas with boat color
+      context.fillStyle = this.props.boatColor;
+      context.fillRect(0,0,canvas.width, canvas.height)
+      // start with a large font size
+      let fontsize = 160;
+      // lower the font size until the text fits the canvas
+      do {
+          fontsize--;
+          let strokewidth = fontsize / 53.333; //for outline
+          context.font = ` ${fontWeight} ${fontsize}px ${this.state.selectedFont}`;
+          context.fillStyle = this.state.selectedColor;
+          context.textAlign = "center";
+          context.textBaseline = "middle";
+          context.lineWidth = strokewidth; //for outline
+      } while (context.measureText(text).width > canvas.width)
 
+      // draw the text
+      context.fillText(text, 350 ,yPosition);
 
-    if(prevState && prevState.textWidth >= 0){
-      if(prevState.textWidth !== textWidthInCanvas){
-        this.setState({textWidth: textWidthInCanvas})
+      // draw the outline
+      if(this.state.showOutline){
+        context.strokeStyle = this.state.showOutlineColor;
+        context.lineJoin = "miter"; //Experiment with "bevel" & "round" for the effect you want!
+        context.miterLimit = 2;
+        context.strokeText(text, 350, yPosition);
       }
-      if(prevState.textHeight !== fontsize){
-        this.setState({textHeight: fontsize})
-      }
-    }
 
-}
+
+
+      if(prevState && prevState.textWidth >= 0){
+        if(prevState.textWidth !== textWidthInCanvas){
+          if(this.state.textWidth === 0){
+            this.setState({textHeight: 0})
+          }
+          this.setState({textWidth: textWidthInCanvas})
+        }
+        if(prevState.textHeight !== fontsize){
+          this.setState({textHeight: fontsize})
+        }
+      }
+
+  }
 
   render(){
 
-    console.log(this.props);
+    // console.log(this.props);
     return (
       <div  className="font-preview-container">
         <div id="haha">
@@ -87,17 +94,18 @@ fitTextOnCanvas = (text,fontface,yPosition, prevState, prevProps) => {
         <p>width: {Number(this.state.textWidth).toFixed()}</p>
         <p>height: {Number(this.state.textHeight)}</p>
 
+        {/*
           <p  style={{
             ...{backgroundColor: `${this.props.boatColor}`},
             ...{color: `${this.state.selectedColor}`},
             ...{fontFamily: `${this.state.selectedFont}`},
             ...{fontWeight: this.state.fontWeightBold ? 'bold' : 'normal'},
-            // ...{textShadow: "4px 4px white, 8px 8px blue"}
             ...{textShadow: this.state.showShadow && `3px 3px white, 8px 8px ${this.state.showShadowColor}`}}
           } className="font-preview-text scale--js">
               {this.props.masterText}
 
           </p>
+          */ }
 
           <p id="place-name">
             {this.props.masterText}

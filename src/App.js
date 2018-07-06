@@ -14,29 +14,8 @@ class App extends Component {
   }
 
   handleMasterText = (e) => {
-
-    this.setState({[e.target.name]: e.target.value}, ()=>{
-      // var scalable = document.querySelectorAll('.scale--js');
-      // var margin = 10;
-      // for (var i = 0; i < scalable.length; i++) {
-      //   var scalableContainer = scalable[i].parentNode;
-      //   scalable[i].style.transform = 'scale(1)';
-      //   var scalableContainerWidth = scalableContainer.offsetWidth - margin;
-      //
-      //   var scalableWidth = scalable[i].offsetWidth;
-      //
-      //   scalable[i].style.transform = 'scale(' + scalableContainerWidth / scalableWidth + ')';
-      //   scalableContainer.style.height = scalable[i].getBoundingClientRect().height + 'px';
-      //
-      //   console.log(scalableContainer.style.height);
-      //
-      // }
-    })
-    // scaleHeader = () => {
-
-    // }
+    this.setState({[e.target.name]: e.target.value})
   }
-
 
   addPreview = () => {
     const fontPreviewCount = [...this.state.fontPreviewCount, Date.now()]
@@ -54,31 +33,6 @@ class App extends Component {
 
   purchase = (details) => {
     console.log({...details, ...{text: this.state.masterText}});
-
-
-
-
-    // NEED TO FIGURE OUT HEIGHT x WIDTH AND CONVERT TO INCHES
-    // var arr = Object.values(details);
-    // arr.join();
-    // console.log(arr.join(" "));
-    // const that = this;
-    // function getTextWidth() {
-    //   // if given, use cached canvas for better performance
-    //   // else, create new canvas
-    //   var text = that.state.masterText;
-    //   var font = arr.join(" ")
-    //   var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
-    //   var context = canvas.getContext("2d");
-    //   context.font = font;
-    //   var metrics = context.measureText(text);
-    //   console.log(metrics.height);
-    //   console.log(metrics.width);
-    //   return metrics.width;
-    // };
-    //
-    // getTextWidth()
-
   }
 
   render() {
