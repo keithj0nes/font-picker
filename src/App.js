@@ -9,7 +9,7 @@ class App extends Component {
 
   state = {
     masterText: "",
-    boatColor: "",
+    boatColor: "white",
     fontPreviewCount: []
   }
 
@@ -90,10 +90,19 @@ class App extends Component {
         </header>
 
         <MasterInput handleMasterText={this.handleMasterText}/>
+        Boat Color: <select onChange={this.handleMasterText} name="boatColor">
+          <option value="white">White</option>
+          <option value="black">Black</option>
+          <option value="blue">Blue</option>
+          <option value="red">Red</option>
+          <option value="green">Green</option>
+
+        </select>
         <FontPreview
           masterText={this.state.masterText}
           purchase={this.purchase}
           id={1}
+          boatColor={this.state.boatColor}
         />
 
         {

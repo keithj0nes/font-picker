@@ -38,7 +38,7 @@ componentDidMount(){
 componentDidUpdate(prevProps, prevState){
   // console.log(prevState);
   console.log('updating');
-  this.fitTextOnCanvas(this.props.masterText, this.state.selectedFont, 100, prevState, prevProps)
+  this.fitTextOnCanvas(this.props.masterText, this.state.selectedFont, 100, prevState, prevProps);
 }
 
 fitTextOnCanvas = (text,fontface,yPosition, prevState, prevProps) => {
@@ -49,6 +49,8 @@ fitTextOnCanvas = (text,fontface,yPosition, prevState, prevProps) => {
 
     //clear canvas
     context.clearRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = this.props.boatColor;
+    context.fillRect(0,0,canvas.width, canvas.height)
     // start with a large font size
     let fontsize = 160;
     // lower the font size until the text fits the canvas
@@ -71,10 +73,12 @@ fitTextOnCanvas = (text,fontface,yPosition, prevState, prevProps) => {
         this.setState({textHeight: fontsize})
       }
     }
+
 }
 
   render(){
 
+    console.log(this.props);
     return (
       <div  className="font-preview-container">
         <div id="haha">
