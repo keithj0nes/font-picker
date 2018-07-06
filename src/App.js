@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import logo from './images/prismgraphicslogo.png';
 import './App.css';
 
 import MasterInput from './components/MasterInput';
@@ -40,7 +40,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 className="App-title">Boat Lettering Customizer</h1>
         </header>
 
         <MasterInput handleMasterText={this.handleMasterText}/>

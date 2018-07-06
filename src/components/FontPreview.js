@@ -19,6 +19,8 @@ class FontPreview extends React.Component {
 
   handleSelectChange = (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    console.log(value);
+
     this.setState({[e.target.name]: value})
   }
 
@@ -27,7 +29,7 @@ class FontPreview extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState){
-    console.log('updating');
+    // console.log('updating');
     this.fitTextOnCanvas(this.props.masterText, this.state.selectedFont, 100, prevState, prevProps);
   }
 
@@ -36,6 +38,8 @@ class FontPreview extends React.Component {
       const context=canvas.getContext("2d");
       const fontWeight = this.state.fontWeightBold ? 'bold' : 'normal';
       const textWidthInCanvas = context.measureText(text).width;
+
+      const oneInch = 0.010416666666819;
 
       //clear canvas
       context.clearRect(0, 0, canvas.width, canvas.height);
@@ -46,6 +50,7 @@ class FontPreview extends React.Component {
       // start with a large font size
       let fontsize = 160;
       // lower the font size until the text fits the canvas
+      // console.log(context.measureText(text));
       do {
           fontsize--;
           let strokewidth = fontsize / 53.333; //for outline
@@ -66,6 +71,8 @@ class FontPreview extends React.Component {
         context.miterLimit = 2;
         context.strokeText(text, 350, yPosition);
       }
+      // console.log(this.state.textHeight * oneInch, 'height');
+      // console.log(this.state.textWidth * oneInch, 'width');
 
 
 
@@ -77,6 +84,9 @@ class FontPreview extends React.Component {
           this.setState({textWidth: textWidthInCanvas})
         }
         if(prevState.textHeight !== fontsize){
+          if(this.state.textWidth === 0){
+            this.setState({textHeight: 0})
+          }
           this.setState({textHeight: fontsize})
         }
       }
@@ -86,6 +96,7 @@ class FontPreview extends React.Component {
   render(){
 
     // console.log(this.props);
+    
     return (
       <div  className="font-preview-container">
         <div id="haha">
@@ -136,6 +147,13 @@ class FontPreview extends React.Component {
             {this.state.showOutline &&
               <div>
                 <h1>OUTLINE DATA</h1>
+                <select onChange={this.handleSelectChange} name="showOutlineColor">
+                  <option value="black">Black</option>
+                  <option value="blue">Blue</option>
+                  <option value="red">Red</option>
+                  <option value="green">Green</option>
+
+                </select>
               </div>
             }
             <input type="checkbox" id={`showShadow-${this.props.id}`} onChange={this.handleSelectChange} name="showShadow" checked={this.state.showShadow}/>
